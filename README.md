@@ -1,4 +1,10 @@
 # EXPERIMENT--05-SOIL-MOISTURE-SENSOR-INTERFACE-TO-IOT-DEVELOPMENT-BOARD-
+
+### NAME:RAMPRASATH.R
+### REG NO:212223220086
+### DEPT :IT
+
+
 ## Aim: To Interface a Analog Input  (soil moisture sensor) to ARM IOT development board and write a  program to obtain  the data on the com port 
 ## Components required: STM32 CUBE IDE, ARM IOT development board,  STM programmer tool.
 ## Theory 
@@ -97,11 +103,52 @@ GND is the ground pin.
 
 
 ## STM 32 CUBE PROGRAM :
+```
+#if defined (__ICCARM__) || defined (__ARMCC_VERSION)
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#elif defined(__GNUC__)
+   /* With GCC, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#endif /* __ICCARM__ || __ARMCC_VERSION */
 
 
+PUTCHAR_PROTOTYPE
+{
+  /* Place your implementation of fputc here */
+  /* e.g. write a character to the USART2 and Loop until the end of transmission */
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
 
-## Output screen shots on serial monitor   :
- 
+  return ch;
+}
+
+while (1)
+  {
+	  HAL_ADC_Start(&hadc);
+	  		HAL_ADC_PollForConversion(&hadc,100);
+	  		adc_val = HAL_ADC_GetValue(&hadc);
+	  		HAL_ADC_Stop(&hadc);
+	  		HAL_Delay(500);
+
+	  		uint32_t soilmoist;
+soilmoist=adc_val/10.24;
+	  		printf("soilmoisture :%ld\n",soilmoist);
+	  		if(adc_val<500)
+	  		{
+	  			 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);;
+	  		}
+	  		if(adc_val>500)
+	  		{
+	  			 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);;
+	  		}
+  }
+
+```
+
+
+## Output screen shot  :
+ ![Screenshot 2024-11-13 110755](https://github.com/user-attachments/assets/1a539ff8-c78d-44af-8c6c-dc7e1b1caa1e)
+
  
  
  
